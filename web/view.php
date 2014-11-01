@@ -21,12 +21,7 @@ require_once( "commonphp/template.php" );
 templatetop("WikiProject Popular pages lists", array( 'config.css' ), array(), '<a href="." title="Popular pages">Popular pages</a>');
 require_once('commonphp/GlobalFunctions.php');
 date_default_timezone_set('UTC');
-?>
-		<br />
-		<div class="result notice">
-		This page is still in development. Data for a few projects is not currently available.
-		</div>
-<?php
+
 $assesstemplates = array(
 'unassessed' => '<td class="assess unassessed"><a href="//en.wikipedia.org/wiki/Category:Unassessed_$1_articles" title="Category:Unassessed $2 articles">Unassessed</a></td>',
 '' => '<td class="assess unassessed"><a href="//en.wikipedia.org/wiki/Category:Unassessed_$1_articles" title="Category:Unassessed $2 articles">Unassessed</a></td>',
@@ -50,7 +45,8 @@ $assesstemplates = array(
 'portal' => '<td class="assess portal"><a href="//en.wikipedia.org/wiki/Category:Portal-Class_$1_articles" title="Category:Portal-Class $2 articles">Portal</a></td>',
 'future' => '<td class="assess future"><a href="//en.wikipedia.org/wiki/Category:Future-Class_$1_articles" title="Category:Future-Class $2 articles">Future</a></td>',
 'merge' => '<td class="assess merge"><a href="//en.wikipedia.org/wiki/Category:Merge-Class_$1_articles" title="Category:Merge-Class $2 articles">Merge</a></td>',
-'needed' => '<td class="assess needed"><a href="//en.wikipedia.org/wiki/Category:Needed-Class_$1_articles" title="Category:Needed-Class $2 articles">Needed</a></td>'
+'needed' => '<td class="assess needed"><a href="//en.wikipedia.org/wiki/Category:Needed-Class_$1_articles" title="Category:Needed-Class $2 articles">Needed</a></td>',
+'redirect' => '<td class="assess redirect"><a href="//en.wikipedia.org/wiki/Category:Redirect-Class_$1_articles" title="Category:Redirect-Class $2 articles">Redirect</a></td>'
 );
 
 $importancetemplates = array(
@@ -118,8 +114,9 @@ if ($_GET && isset($_GET['proj'])) {
 		}
 		$db2 = mysql_connect( 'enwiki.labsdb', $my_user, $my_pass );
 		mysql_select_db( 'p50380g50816__pop_stats', $db2 );
+		$mproj2 = mysql_real_escape_string( str_replace(array('"', '\\'), array('', '\\\\'), json_encode($proj) ), $db2);
 		if ( isset( $_GET['count'] ) && $_GET['count'] == 'true') {
-			$query = "SELECT SUM(hits), COUNT(*) FROM $table WHERE project_assess LIKE '%\"{$mproj}\"%'";
+			$query = "SELECT SUM(hits), COUNT(*) FROM $table WHERE project_assess LIKE '%\"{$mproj2}\"%'";
 			$res = mysql_query( $query, $db2 );
 			$row = mysql_fetch_row($res);
 			$value = (float) $row[0];
@@ -131,7 +128,7 @@ if ($_GET && isset($_GET['proj'])) {
 			echo "Total pages in project: <b>$disppages</b>";
 			echo "</div>";
 		}
-		$query = "SELECT ns, title, hits, project_assess FROM $table WHERE project_assess LIKE '%\"{$mproj}\":%' ORDER BY hits DESC LIMIT $limit OFFSET $offset";
+		$query = "SELECT ns, title, hits, project_assess FROM $table WHERE project_assess LIKE '%\"{$mproj2}\":%' ORDER BY hits DESC LIMIT $limit OFFSET $offset";
 		$res = mysql_query( $query, $db2 );
 		$rows = mysql_num_rows ( $res );
 		if ( $rows == $limit ) {

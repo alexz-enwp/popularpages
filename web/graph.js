@@ -555,7 +555,8 @@ assesstemplates = {
 	'portal' : '<td class="assess portal"><a href="//en.wikipedia.org/wiki/Category:Portal-Class_$1_articles" title="Category:Portal-Class $2 articles">Portal</a></td>',
 	'future' : '<td class="assess future"><a href="//en.wikipedia.org/wiki/Category:Future-Class_$1_articles" title="Category:Future-Class $2 articles">Future</a></td>',
 	'merge' : '<td class="assess merge"><a href="//en.wikipedia.org/wiki/Category:Merge-Class_$1_articles" title="Category:Merge-Class $2 articles">Merge</a></td>',
-	'needed' : '<td class="assess needed"><a href="//en.wikipedia.org/wiki/Category:Needed-Class_$1_articles" title="Category:Needed-Class $2 articles">Needed</a></td>'
+	'needed' : '<td class="assess needed"><a href="//en.wikipedia.org/wiki/Category:Needed-Class_$1_articles" title="Category:Needed-Class $2 articles">Needed</a></td>',
+	'redirect' : '<td class="assess redirect"><a href="//en.wikipedia.org/wiki/Category:Redirect-Class_$1_articles" title="Category:Redirect-Class $2 articles">Redirect</a></td>'
 };
 
 importancetemplates = {

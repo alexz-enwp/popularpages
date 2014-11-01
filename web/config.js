@@ -94,6 +94,7 @@ $(document).ready(function(){
 	$('#submit-button').on('click', function() {
 		$('#spinner2').css('visibility', 'visible')
 		$('#submit-button').attr('disabled', true);
+		url = "configbackend.php";
 		if (mode == 'new') {
 			var category = $('#category').val().match(/^([a-zA-Z]+)-Class (.+) articles$/)[2];
 			params = {
@@ -103,7 +104,6 @@ $(document).ready(function(){
 				'listpage': $('#listpage').val(),
 				'lim':  $('#limit').val()
 			}
-			url = "configbackend.php";
 			$.post(url, params)
 			.done(function(data) {
 				$('#spinner2').css('visibility', 'hidden')

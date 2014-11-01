@@ -23,6 +23,7 @@ import locale
 import ConfigParser
 import settings
 import calendar
+import json
 	
 class TableMaker(object):
 		
@@ -52,11 +53,11 @@ class TableMaker(object):
 		for proj in projects:
 			if proj.removed:
 				continue
-			# if proj.listpage != 'WikiProject Athletics/Popular pages':
-				# if not skip:
-					# continue
-			# skip = True
-			#if proj.listpage != 'WikiProject Military history/Australia, New Zealand and South Pacific military history task force/Popular pages':
+			#if proj.listpage != 'WikiProject Tropical Cyclones/Popular pages':
+			#	if not skip:
+			#		continue
+			#skip = True
+			#if proj.listpage != 'WikiProject Law/Popular pages':
 			#	continue
 			target = page.Page(site, proj.listpage, namespace=4)
 			section = 0
@@ -77,17 +78,22 @@ class TableMaker(object):
 				top = "==List==\n<!-- Changes made to this section will be overwritten on the next update. Do not change the name of this section. -->"
 				top += "\nPeriod: "+str(year)+"-"+str(month).zfill(2)+"-01 &mdash; "+str(year)+"-"+str(month).zfill(2)+"-"+str(numdays)+" (UTC)\n\n"
 				top += '{| class="wikitable sortable" style="text-align: right;"\n'
-			query = "SELECT ns, title, hits, project_assess FROM `"+dbtable+"` WHERE project_assess LIKE '%\""+proj.category+"\":%' ORDER BY hits DESC LIMIT "+str(limit)
+			catsearch = catsearch = MySQLdb.escape_string(json.dumps(proj.category).replace('"', '').replace('\\', '\\\\'))
+			query = "SELECT ns, title, hits, project_assess FROM `"+dbtable+"` WHERE project_assess LIKE '%\""+catsearch+"\":%' ORDER BY hits DESC LIMIT "+str(limit)
 			rows = cursor.execute(query)
 			useImportance = True
 			table = ''
 			rank = 0
+			key = proj.category.decode('utf-8')
+			#print repr(key)
+			#print repr(proj.category)
 			for record in cursor:
 				hits = locale.format("%.*f", (0,record[2]), True)
 				avg = locale.format("%.*f", (0, record[2]/numdays ), True)					
-				project_assess = eval(record[3])
-				assess = project_assess[proj.category][0]
-				if rank == 0 and project_assess[proj.category][1] is '':
+				project_assess = json.loads(record[3])
+				#print repr(project_assess.keys())
+				assess = project_assess[key][0]
+				if rank == 0 and project_assess[key][1] is '':
 					useImportance = False
 				template = "{{class|"+assess+"}}"
 				p = page.Page(site, title=record[1], check=False, followRedir=False, namespace=int(record[0]))
@@ -99,7 +105,7 @@ class TableMaker(object):
 				table+= "| " + avg + "\n"
 				table+= template + "\n"
 				if useImportance:
-					imp = project_assess[proj.category][1]
+					imp = project_assess[key][1]
 					tem = "{{importance|"+imp+"}}"
 					table+= tem + "\n"
 			if rank == 0:

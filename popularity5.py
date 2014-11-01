@@ -38,8 +38,12 @@ if __name__ == '__main__':
 	# Manually generate tables
 	elif len(sys.argv) > 1 and sys.argv[1] == '--make-tables':
 		from poppages import tablemaker
-		month = int(raw_input('Month: '))
-		year = int(raw_input('Year: '))
+		if not sys.argv[2]:
+			month = int(raw_input('Month: '))
+			year = int(raw_input('Year: '))
+		else:
+			month = int(sys.argv[2])
+			year = int(sys.argv[3])
 		d = datetime.date(month=month, year=year, day=1)
 		t = tablemaker.TableMaker(d)
 		t.makeResults(manual=True)
@@ -62,7 +66,7 @@ if __name__ == '__main__':
 		p = fileprocessor.FileProcessor(filename)
 		tablename = str(int(time.time()*10000000))
 		p.createTable(tablename)
-		p.processPage(filename, 'fast')
+		p.processPage(filename, tablename)
 	# Check status
 	elif len(sys.argv) > 1 and sys.argv[1] == '--monitor':
 		from poppages import monitor

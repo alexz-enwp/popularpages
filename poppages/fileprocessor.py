@@ -50,8 +50,8 @@ class FileProcessor(object):
 		table = 'pop_'+curmonth
 		cmddate = datetime.datetime.strptime(cmddate, '%Y-%m-%d-%H')
 		cmddate = cmddate.replace(minute = 0, second=0, microsecond=0)
-		if cmddate != self.todo:
-			return
+		#if cmddate != self.todo:
+		#	return
 		hours = self.getHours(table)
 		# Update the config now - this way if we get backed up, it can run 
 		# concurrently without trying to run the same file twice
