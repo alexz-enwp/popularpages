@@ -24,6 +24,8 @@ import ConfigParser
 import settings
 import calendar
 import json
+import urllib2
+import time
 	
 class TableMaker(object):
 		
@@ -85,7 +87,7 @@ class TableMaker(object):
 			table = ''
 			rank = 0
 			key = proj.category.decode('utf-8')
-			#print repr(key)
+			print repr(key)
 			#print repr(proj.category)
 			for record in cursor:
 				hits = locale.format("%.*f", (0,record[2]), True)
@@ -118,7 +120,12 @@ class TableMaker(object):
 			table = top + table
 			# target = page.Page(site, 'User:Mr.Z-man/Sandbox')
 			# section=1
-			res = target.edit(newtext=table.encode('utf-8'), summary="Popularity stats for "+proj.name, section=str(section))
+			while True:
+				try:
+					res = target.edit(newtext=table.encode('utf-8'), summary="Popularity stats for "+proj.name, section=str(section))
+					break
+				except urllib2.HTTPError:
+					time.sleep(5)
 			# print proj.category
 			# print proj.listpage
 			# if proj.listpage == 'WikiProject Military history/Australian military history task force/Popular pages':

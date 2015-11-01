@@ -33,7 +33,7 @@ class FileProcessor(object):
 			# TODO: Add fancy processing in case the flie isn't nicely named
 			self.todo = datetime.datetime.strptime(filename, 'pagecounts-%Y%m%d-%H0000.gz')
 		else:
-			self.todo = datetime.datetime.utcnow()
+			self.todo = datetime.datetime.utcnow()-datetime.timedelta(days=7)
 		self.todo = self.todo.replace(minute = 0, second=0, microsecond=0)
 		# Note, the timestamp of the datafile is the hour it was published, not collected
 		# This means that the first page of the month is actually data from the previous month
@@ -77,7 +77,8 @@ class FileProcessor(object):
 		if self.todo.day == 1 and self.todo.hour == 0:
 			date = date-datetime.timedelta(hours=2)
 		arg = '--agg='+tablename+'-'+date.strftime("%b%y")
-		proc2 = subprocess.Popen(['/data/project/popularpages/bot/bin/python', '/data/project/popularpages/lib/popularity5.py', arg], stderr=subprocess.PIPE)
+		#proc2 = subprocess.Popen(['/data/project/popularpages/bot/bin/python', '/data/project/popularpages/lib/popularity5.py', arg], stderr=subprocess.PIPE)
+		proc2 = None
 		for h in hours:
 			f = self.__getFile(h)
 			if f is 0:
@@ -87,6 +88,8 @@ class FileProcessor(object):
 				cursor.execute(ndquery, h)
 				db.close()
 				continue
+			if proc2 is None:
+				proc2 = subprocess.Popen(['/data/project/popularpages/bot2/bin/python', '/data/project/popularpages/lib/popularity5.py', arg], stderr=subprocess.PIPE)
 			try:
 				self.processPage(f, tablename)
 				db = MySQLdb.connect(host="tools-db", db='s51401__pop_data', read_default_file="/data/project/popularpages/replica.my.cnf")

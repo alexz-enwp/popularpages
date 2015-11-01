@@ -28,7 +28,7 @@ class Aggregator(object):
 	
 	def update(self, tablename, date):
 		# Initialize
-		time.sleep(30)
+		time.sleep(90)
 		self.date = date
 		config = ConfigParser.ConfigParser()
 		config.read(['pop.ini'])

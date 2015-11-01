@@ -83,10 +83,12 @@ if ( endpos <= startpos) {
 
 rescale = false;
 statusMsg("Setting up graph");
-width = document.documentElement.clientWidth - 300;
+width = $('.content').width() - 40;
+canvaswidth = width;
+//width = document.documentElement.clientWidth - 300;
 labeltextsize = width/668.0;
 smalltextsize = width/1002.0;
-height = 0.6*width;
+height = 0.5*width;
 $("#graph").attr('height', height);
 $("#graph").attr('width', width);
 var canvas = document.getElementById('graph');
@@ -397,13 +399,18 @@ function plotPoints() {
 	}
 	if (!rescale) {	
 		function resizeGraph() {
+			width = $('.content').width() - 40;
+			if (width == canvaswidth) {
+				return false;
+			}
 			rescale = true;
 			statusMsg("Resetting graph");
 			$('#moreinfo').slideUp('fast', function() {
 				$('#moreinfo').remove();
 				currentlyopen = [];
 			});
-			width = document.documentElement.clientWidth - 300;
+			//width = document.documentElement.clientWidth - 300;
+			canvaswidth = width;
 			labeltextsize = width/668.0;
 			smalltextsize = width/1002.0;
 			height = 0.5*width;
