@@ -31,7 +31,7 @@ class FileProcessor(object):
 		os.chdir('/data/project/popularpages/')
 		if filename:
 			# TODO: Add fancy processing in case the flie isn't nicely named
-			self.todo = datetime.datetime.strptime(filename, 'pagecounts-%Y%m%d-%H0000.gz')
+			self.todo = datetime.datetime.strptime(filename, 'pageviews-%Y%m%d-%H0000.gz')
 		else:
 			self.todo = datetime.datetime.utcnow()-datetime.timedelta(days=7)
 		self.todo = self.todo.replace(minute = 0, second=0, microsecond=0)
@@ -181,15 +181,15 @@ class FileProcessor(object):
 	def __getFile(self, date=None):
 		if not date:
 			date = self.todo
-		page = date.strftime('pagecounts-%Y%m%d-%H0000.gz')
+		page = date.strftime('pageviews-%Y%m%d-%H0000.gz')
 		url = "http://dumps.wikimedia.org"
-		main = date.strftime('/other/pagecounts-raw/%Y/%Y-%m/')
+		main = date.strftime('/other/pageviews/%Y/%Y-%m/')
 		if self.__checkExist(main+page):
 			url += main + page
 			filename = page
 			urllib.urlretrieve(url, filename)
 			return filename
-		start = date.strftime('pagecounts-%Y%m%d-%H')
+		start = date.strftime('pageviews-%Y%m%d-%H')
 		end = '.gz'
 		for x in range(1,100):
 			mid = str(x).zfill(4)
